@@ -661,7 +661,11 @@ template <class T, class Comparator, size_t B> struct BTree {
 };
 struct Comp {
   template <class A, class B> int operator()(const A &a, const B &b) const {
-    return a - b;
+    if (a < b)
+      return -1;
+    if (a > b)
+      return 1;
+    return 0;
   }
 };
 
@@ -678,7 +682,11 @@ __attribute__((noinline)) void action(const void *a, VISIT b, int c) {
 struct LibcTree {
   void *root;
   static int compare(const void *a, const void *b) {
-    return reinterpret_cast<size_t>(a) - reinterpret_cast<size_t>(b);
+    if (a < b)
+      return -1;
+    if (a > b)
+      return 1;
+    return 0;
   }
   void *insert(size_t i) {
     return tsearch(reinterpret_cast<void *>(i), &root, compare);
